@@ -8,10 +8,10 @@ class PauloniaRemoteConfService {
   static final _remoteConfig = fb.remoteConfig();
 
   /// Map of default values
-  static Map<String, dynamic> _defaultValues;
+  static Map<String, dynamic>? _defaultValues;
 
   /// Get the map of default values
-  static Map<String, dynamic> get defaultValues => _defaultValues;
+  static Map<String, dynamic>? get defaultValues => _defaultValues;
 
   /// Initialize the service
   ///
@@ -24,7 +24,7 @@ class PauloniaRemoteConfService {
           .REMOTE_CONF_DEFAULT_EXPIRATION_TIME_IN_HOURS}) async {
     _defaultValues = defaultValues;
     await _remoteConfig.ensureInitialized();
-    _remoteConfig.defaultConfig = _defaultValues;
+    _remoteConfig.defaultConfig = _defaultValues!;
     if (PUtils.isOnRelease() && (await PUtils.checkNetwork())) {
       await _remoteConfig.fetch();
     }
@@ -35,14 +35,14 @@ class PauloniaRemoteConfService {
   ///
   /// This function converts the value in the desire type.
   static dynamic get(String keyName, PRCType rcType) {
-    if (PUtils.isOnTest()) return _defaultValues[keyName];
+    if (PUtils.isOnTest()) return _defaultValues![keyName];
     switch (rcType) {
       case PRCType.STRING:
         return _remoteConfig.getString(keyName);
       case PRCType.INT:
-        return _remoteConfig.getNumber(keyName)?.toInt();
+        return _remoteConfig.getNumber(keyName).toInt();
       case PRCType.DOUBLE:
-        return _remoteConfig.getNumber(keyName)?.toDouble();
+        return _remoteConfig.getNumber(keyName).toDouble();
       case PRCType.BOOL:
         return _remoteConfig.getBoolean(keyName);
       default:

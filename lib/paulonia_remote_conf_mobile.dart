@@ -5,13 +5,13 @@ import 'package:paulonia_utils/paulonia_utils.dart';
 
 class PauloniaRemoteConfService {
   /// Remote configuration instance
-  static RemoteConfig _remoteConfig;
+  static late RemoteConfig _remoteConfig;
 
   /// Map of default values
-  static Map<String, dynamic> _defaultValues;
+  static Map<String, dynamic>? _defaultValues;
 
   /// Get the map of default values
-  static Map<String, dynamic> get defaultValues => _defaultValues;
+  static Map<String, dynamic>? get defaultValues => _defaultValues;
 
   /// Initialize the service
   ///
@@ -25,19 +25,18 @@ class PauloniaRemoteConfService {
           .REMOTE_CONF_DEFAULT_EXPIRATION_TIME_IN_HOURS}) async {
     _remoteConfig = await RemoteConfig.instance;
     _defaultValues = defaultValues;
-    await _remoteConfig.setDefaults(_defaultValues);
+    await _remoteConfig.setDefaults(_defaultValues!);
     if (PUtils.isOnRelease() && (await PUtils.checkNetwork())) {
-      await _remoteConfig.fetch(
-          expiration: Duration(hours: expirationTimeInHours));
+      await _remoteConfig.fetch();
     }
-    await _remoteConfig.activateFetched();
+    await _remoteConfig.fetchAndActivate();
   }
 
   /// Get the value of [keyName] with [rcType]
   ///
   /// This function converts the value in the desire type.
   static dynamic get(String keyName, PRCType rcType) {
-    if (PUtils.isOnTest()) return _defaultValues[keyName];
+    if (PUtils.isOnTest()) return _defaultValues![keyName];
     switch (rcType) {
       case PRCType.STRING:
         return _remoteConfig.getString(keyName);

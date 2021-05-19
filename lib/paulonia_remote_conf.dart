@@ -7,7 +7,7 @@ import 'package:paulonia_remote_conf/paulonia_remote_conf_mobile.dart'
 
 class PauloniaRemoteConf {
   /// Get the map of default values
-  static Map<String, dynamic> get defaultValues =>
+  static Map<String, dynamic>? get defaultValues =>
       PauloniaRemoteConfService.defaultValues;
 
   /// Initialize the service
